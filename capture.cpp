@@ -3,22 +3,22 @@
 
 Capture::Capture(){
 
-    capt = cvCaptureFromCAM( CV_CAP_ANY );
-    if (!capt){
+    capt_ = cvCaptureFromCAM( CV_CAP_ANY );
+    if (!capt_){
         cout << "No camera detected" << endl;
     }
 }
 
 Capture::~Capture(){
     // Terminate video capture and free capture resources
-    cvReleaseCapture( &capt );
+    cvReleaseCapture( &capt_ );
 }
 
 IplImage* Capture::nextVideoFrame(){
 
     Mat frame, frameCopy;
 
-    IplImage* image = cvQueryFrame( capt );
+    IplImage* image = cvQueryFrame( capt_ );
     frame = image;
 
     if( frame.empty() )

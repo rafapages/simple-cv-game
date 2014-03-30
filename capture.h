@@ -19,10 +19,9 @@ public:
     Capture();
     ~Capture();
     IplImage* nextVideoFrame();
-    double a;
 
 private:
-    CvCapture* capt;
+    CvCapture* capt_;
 
 };
 

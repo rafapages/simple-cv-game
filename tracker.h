@@ -13,6 +13,7 @@ public:
     Mat getBinFrame();
     void setFrames(Mat _cameraFrame);
     void binFrameProcessing();
+    Point trackObject();
 
 
 private:
