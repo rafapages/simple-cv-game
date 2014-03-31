@@ -2,16 +2,18 @@
 #define BALL_H
 
 #include "capture.h"
+#include "paddle.h"
 
 class Ball{
 
 public:
 
-    Ball(unsigned int _h, unsigned int _w, unsigned int _r, unsigned int _s);
+    Ball(unsigned int _h, unsigned int _w, unsigned int _r, unsigned int _s, Paddle* _lp, Paddle* _rp);
 
     Point getPosition();
     void updatePosition();
     unsigned int getRadious();
+    int checkWinner();
 
 private:
 
@@ -22,6 +24,9 @@ private:
     unsigned int width_;
     unsigned int speed_;
     Point2f direction_;
+    Paddle* lPaddle_;
+    Paddle* rPaddle_;
+    int winner_;
 
 
 };

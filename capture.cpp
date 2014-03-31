@@ -30,6 +30,8 @@ IplImage* Capture::nextVideoFrame(){
     else
         flip( frame, frameCopy, 0 );
 
+    flip( frame, frameCopy, 0 );
+
     return image;
 
 }
