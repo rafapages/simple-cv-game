@@ -45,9 +45,9 @@ int main(int argc, char *argv[]){
     // It will finish when one of the two players wins 10 times
     while ((score1 != 10) && (score2 != 10)){
 
-        Paddle leftPaddle(Point(20, (int)(image->height*0.5)), 10, 40, image->width, image->height);
-        Paddle rightPaddle(Point(image->width - 20, (int)(image->height*0.5)), 10, 40, image->width, image->height);
-        Ball ball(image->height, image->width, 10, 20, &leftPaddle, &rightPaddle);
+        Paddle leftPaddle(Point(20, (int)(image->height*0.5)), 5, 40, image->width, image->height);
+        Paddle rightPaddle(Point(image->width - 20, (int)(image->height*0.5)), 5, 40, image->width, image->height);
+        Ball ball(image->height, image->width, 8, 20, &leftPaddle, &rightPaddle);
 
         Tracker leftTracker, rightTracker;
 
@@ -72,8 +72,8 @@ int main(int argc, char *argv[]){
             s1 << score1;
             s2 << score2;
 
-            putText(frame, s1.str(), Point(image->width* 0.25 - 10, 60), 1, 4, Scalar(255,255,0), 5);
-            putText(frame, s2.str(), Point(image->width* 0.75 - 10, 60), 1, 4, Scalar(255,255,0), 5);
+            putText(frame, s1.str(), Point(image->width* 0.25 - 10, 60), 1, 4, Scalar(255,255,255), 5);
+            putText(frame, s2.str(), Point(image->width* 0.75 - 10, 60), 1, 4, Scalar(255,255,255), 5);
 
             // We draw the ball in the screen
             circle(frame, ball.getPosition(), ball.getRadious(), Scalar(0,0,255), -1);
@@ -96,8 +96,8 @@ int main(int argc, char *argv[]){
             Point posR = rightTracker.trackObject();
 
             // A small circle is drawn in the center of the balls
-            circle(frame, posL, 5, Scalar(0,255,0), -1);
-            circle(frame, posR + Point(leftHalfImage->width, 0), 5, Scalar(0,255,0), -1);
+            circle(frame, posL, 4, Scalar(0,255,0), -1);
+            circle(frame, posR + Point(leftHalfImage->width, 0), 4, Scalar(0,255,0), -1);
 
             // Left paddle is drawn in the screen
             leftPaddle.setPosition(posL.y);

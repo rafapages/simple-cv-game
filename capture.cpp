@@ -16,7 +16,7 @@ Capture::~Capture(){
 
 IplImage* Capture::nextVideoFrame(){
 
-    Mat frame, frameCopy;
+    Mat frame;
 
     IplImage* image = cvQueryFrame( capt_ );
     frame = image;
@@ -24,13 +24,8 @@ IplImage* Capture::nextVideoFrame(){
     if( frame.empty() )
         image = 0;
 
-    if( image->origin == IPL_ORIGIN_TL )
-        frame.copyTo( frameCopy );
-
-    else
-        flip( frame, frameCopy, 0 );
-
-    flip( frame, frameCopy, 0 );
+    // Image is flipped horizontally so it works as a mirror
+    cvFlip(image, image,1);
 
     return image;
 

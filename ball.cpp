@@ -11,9 +11,11 @@ Ball::Ball(unsigned int _h, unsigned int _w, unsigned int _r, unsigned int _s, P
     rPaddle_ = _rp;
     winner_ = 0; // no winner yet
 
+    // The initial position is the center of the screen
     position_ = Point((int)(width_*0.5), (int)(height_*0.5));
     prevPosition_ = Point (0, 0); // this one could be just anything...
 
+    // The direction of the ball is selected randomly
     const float xdir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
     const float ydir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
     const float norm = sqrt(xdir*xdir + ydir*ydir);
@@ -24,7 +26,6 @@ Ball::Ball(unsigned int _h, unsigned int _w, unsigned int _r, unsigned int _s, P
 Point Ball::getPosition(){
     return position_;
 }
-
 
 void Ball::updatePosition(){
 
@@ -47,10 +48,11 @@ void Ball::updatePosition(){
     // If the ball hits the paddle
     const int yLmax = lPaddle_->getPosition().y + lPaddle_->getHeight() * 0.5;
     const int yLmin = lPaddle_->getPosition().y - lPaddle_->getHeight() * 0.5;
-    const int xLpos = lPaddle_->getPosition().x - lPaddle_->getWidth() * 0.5;
+    const int xLpos = lPaddle_->getPosition().x + lPaddle_->getWidth() * 0.5;
+
     const int yRmax = rPaddle_->getPosition().y + rPaddle_->getHeight() * 0.5;
     const int yRmin = rPaddle_->getPosition().y - rPaddle_->getHeight() * 0.5;
-    const int xRpos = rPaddle_->getPosition().x + rPaddle_->getWidth() * 0.5;
+    const int xRpos = rPaddle_->getPosition().x - rPaddle_->getWidth() * 0.5;
 
     if ( ((newPos.y - radius_ < yLmax) && ( newPos.y + radius_ > yLmin) && ( (newPos.x - radius_) <= xLpos)) ||
          ((newPos.y - radius_ < yRmax) && ( newPos.y + radius_ > yRmin) && ( (newPos.x + radius_) >= xRpos)) ){

@@ -28,6 +28,7 @@ Point Paddle::getPosition(){
 
 void Paddle::setPosition(int _ypos){
 
+    // The paddle shouldn't go above or below de screen
     if ( ((_ypos + (int)(height_*0.5)) >= frameHeight_) || ((_ypos - (int)(height_*0.5) <= 0)) ){
         return;
     }
