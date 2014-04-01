@@ -1,7 +1,8 @@
+#include <unistd.h>
+
 #include "capture.h"
 #include "ball.h"
 #include "tracker.h"
-//#include "paddle.h"
 
 int main(int argc, char *argv[]){
 
@@ -25,7 +26,6 @@ int main(int argc, char *argv[]){
 
         putText(frame, "cvPONG!", Point(50, image->height * 0.5 + 30),FONT_HERSHEY_DUPLEX,4,Scalar(255,255,255),10);
         putText(frame, "PRESS ANY KEY TO PLAY", Point(150, image->height * 0.5 + 70),FONT_HERSHEY_DUPLEX,0.8,Scalar(255,255,255),1);
-
 
         // Image is shown in the window
         cvShowImage("MainWindow", image);
@@ -111,8 +111,11 @@ int main(int argc, char *argv[]){
             const Point c4 = rightPaddle.getPosition() + Point(rightPaddle.getWidth()*0.5, rightPaddle.getHeight());
             rectangle(frame, c3, c4, Scalar(255,0,0), -1);
 
+            // Image is shown in the window
+            cvShowImage("MainWindow", image);
 
             ball.updatePosition();
+
             int winner = ball.checkWinner();
             if (winner == 1){
                 score1++;
@@ -122,9 +125,6 @@ int main(int argc, char *argv[]){
                 break;
             }
 
-            // Image is shown in the window
-            cvShowImage("MainWindow", image);
-
             // To interrupt the game manually
             if( waitKey( 10 ) >= 0 ){
                 stop = true;
@@ -132,6 +132,8 @@ int main(int argc, char *argv[]){
             }
 
         }
+
+        sleep(1);
 
         if (stop)
             break;

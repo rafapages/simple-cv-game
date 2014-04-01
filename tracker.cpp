@@ -71,7 +71,6 @@ Point Tracker::trackObject(){
     findContours(temp, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
 
     // We use moments method to find our filtered object
-    double prevArea = 0;
     bool objectFound = false;
 
     if (hierarchy.size() > 0) {
@@ -85,13 +84,12 @@ Point Tracker::trackObject(){
                 Moments moment = moments( (cv::Mat)contours[i] );
                 double area = moment.m00;
 
-                if( (area > minTrackingArea)  && (area < maxTrackingArea) && (area > prevArea)){
+                if( (area > minTrackingArea)  && (area < maxTrackingArea) ){
 
                     x = moment.m10 / area;
                     y = moment.m01 / area;
 
                     objectFound = true;
-                    prevArea = area;
 
                 } else {
                     objectFound = false;
