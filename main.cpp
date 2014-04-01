@@ -45,9 +45,10 @@ int main(int argc, char *argv[]){
     // It will finish when one of the two players wins 10 times
     while ((score1 != 10) && (score2 != 10)){
 
+        // Elements of the game are created
         Paddle leftPaddle(Point(20, (int)(image->height*0.5)), 5, 40, image->width, image->height);
         Paddle rightPaddle(Point(image->width - 20, (int)(image->height*0.5)), 5, 40, image->width, image->height);
-        Ball ball(image->height, image->width, 8, 20, &leftPaddle, &rightPaddle);
+        Ball ball(image->height, image->width, 8, 15, &leftPaddle, &rightPaddle);
 
         Tracker leftTracker, rightTracker;
 

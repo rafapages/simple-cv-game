@@ -16,11 +16,20 @@ Ball::Ball(unsigned int _h, unsigned int _w, unsigned int _r, unsigned int _s, P
     prevPosition_ = Point (0, 0); // this one could be just anything...
 
     // The direction of the ball is selected randomly
-    const float xdir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
-    const float ydir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
-    const float norm = sqrt(xdir*xdir + ydir*ydir);
+    // But we check that the result is not zero (or close) in any direction
+    // because that would give us a ball perpendicular to the walls
+    float xdir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
+    float ydir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
+    float norm = sqrt(xdir*xdir + ydir*ydir);
+
+    while ( (fabs(xdir/norm) <= 0.1) || (fabs(ydir/norm) <= 0.1)){
+        xdir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
+        ydir = (float) (rand()) / ((float)(RAND_MAX/2)) - 1;
+        norm = sqrt(xdir*xdir + ydir*ydir);
+    }
 
     direction_ = Point2f(xdir/norm, ydir/norm);
+
 }
 
 Point Ball::getPosition(){

@@ -81,7 +81,7 @@ Point Tracker::trackObject(){
 
             for (int i = 0; i >= 0; i = hierarchy[i][0]) {
 
-                Moments moment = moments( (cv::Mat)contours[i] );
+                Moments moment = moments( contours[i] );
                 double area = moment.m00;
 
                 if( (area > minTrackingArea)  && (area < maxTrackingArea) ){
