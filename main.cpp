@@ -1,34 +1,36 @@
 #include <unistd.h>
 
-#include "capture.h"
+#include <iostream>
+#include <stdio.h>
+
 #include "ball.h"
 #include "tracker.h"
 
-int main(int argc, char *argv[]){
 
-    Capture capture = Capture();
+int main(){
 
-    IplImage* image = capture.nextVideoFrame();
-    Mat frame = image;
+    VideoCapture cap;
+    cap.open(0);
 
-    cvNamedWindow("MainWindow", CV_WINDOW_AUTOSIZE);
-    cvShowImage("MainWindow", image);
+    Mat frame;
+
+    namedWindow("Simple CV game", CV_WINDOW_AUTOSIZE);
 
     // Game welcoming screen
     while(true){
 
         // Image is obtained from the camera
-        image = capture.nextVideoFrame();
-        frame = image;
+        cap >> frame;
 
-        if (image == 0)
+        if (frame.empty())
             break;
 
-        putText(frame, "cvPONG!", Point(50, image->height * 0.5 + 30),FONT_HERSHEY_DUPLEX,4,Scalar(255,255,255),10);
-        putText(frame, "PRESS ANY KEY TO PLAY", Point(150, image->height * 0.5 + 70),FONT_HERSHEY_DUPLEX,0.8,Scalar(255,255,255),1);
+        putText(frame, "cvPONG!", Point(50, frame.rows * 0.5 + 30),FONT_HERSHEY_DUPLEX,4,Scalar(255,255,255),10);
+        putText(frame, "PRESS ANY KEY TO PLAY", Point(150, frame.rows * 0.5 + 70),FONT_HERSHEY_DUPLEX,0.8,Scalar(255,255,255),1);
+
 
         // Image is shown in the window
-        cvShowImage("MainWindow", image);
+        imshow("Simple CV game", frame);
 
         // To stop the camera and close the window
         if( waitKey( 10 ) >= 0 ){
@@ -43,50 +45,53 @@ int main(int argc, char *argv[]){
     int score1, score2;
     score1 = score2 = 0;
     // It will finish when one of the two players wins 10 times
+
+    Mat leftHalfFrame(frame.rows, frame.cols * 0.5, CV_8UC3);
+    Mat rightHalfFrame(frame.rows, frame.cols * 0.5, CV_8UC3);
+
     while ((score1 != 10) && (score2 != 10)){
 
         // Elements of the game are created
-        Paddle leftPaddle(Point(20, (int)(image->height*0.5)), 5, 40, image->width, image->height);
-        Paddle rightPaddle(Point(image->width - 20, (int)(image->height*0.5)), 5, 40, image->width, image->height);
-        Ball ball(image->height, image->width, 8, 15, &leftPaddle, &rightPaddle);
+        Paddle leftPaddle(Point(20, (int)(frame.rows*0.5)), 5, 40, frame.cols, frame.rows);
+        Paddle rightPaddle(Point(frame.cols - 20, (int)(frame.rows*0.5)), 5, 40, frame.cols, frame.rows);
+        Ball ball(frame.rows, frame.cols, 8, 15, &leftPaddle, &rightPaddle);
+
 
         Tracker leftTracker, rightTracker;
 
         // The image is divided into two halves to track the ball in each
-        IplImage* leftHalfImage  = cvCreateImage(cvSize(image->width/2, image->height), image->depth, image->nChannels);
-        IplImage* rightHalfImage = cvCreateImage(cvSize(image->width/2, image->height), image->depth, image->nChannels);
-        CvMat tmp;
-        Mat leftHalfFrame, rightHalfFrame;
+        Mat tmp;
 
         // Game loop
         while(true){
 
             // Image is obtained from the camera
-            image = capture.nextVideoFrame();
-            frame = image;
+            cap >> frame;
 
-            if (image == 0)
+            if (frame.empty())
                 break;
 
+
+            // Half frames are set
+            tmp = frame(Rect(0,0,leftHalfFrame.cols, leftHalfFrame.rows));
+            tmp.copyTo(leftHalfFrame);
+
+            tmp = frame(Rect(leftHalfFrame.cols, 0, rightHalfFrame.cols, rightHalfFrame.rows));
+            tmp.copyTo(rightHalfFrame);
+
             // We draw the score in both sides
-            stringstream s1, s2;
+            std::stringstream s1, s2;
             s1 << score1;
             s2 << score2;
 
-            putText(frame, s1.str(), Point(image->width* 0.25 - 10, 60), 1, 4, Scalar(255,255,255), 5);
-            putText(frame, s2.str(), Point(image->width* 0.75 - 10, 60), 1, 4, Scalar(255,255,255), 5);
+            putText(frame, s1.str(), Point(frame.cols* 0.25 - 10, 60), 1, 4, Scalar(255,255,255), 5);
+            putText(frame, s2.str(), Point(frame.cols* 0.75 - 10, 60), 1, 4, Scalar(255,255,255), 5);
 
             // We draw the ball in the screen
             circle(frame, ball.getPosition(), ball.getRadious(), Scalar(0,0,255), -1);
 
-            // Half frames are set
-            cvGetSubRect(image, &tmp, cvRect(0,0, leftHalfImage->width, leftHalfImage->height));
-            cvCopy(&tmp, leftHalfImage);
-            leftHalfFrame = leftHalfImage;
 
-            cvGetSubRect(image, &tmp, cvRect(leftHalfImage->width, 0, rightHalfImage->width, rightHalfImage->height));
-            cvCopy(&tmp, rightHalfImage);
-            rightHalfFrame = rightHalfImage;
+            imshow("Simple CV game", frame);
 
             // Object is tracked in both half frames
             leftTracker.setFrames(leftHalfFrame);
@@ -98,7 +103,7 @@ int main(int argc, char *argv[]){
 
             // A small circle is drawn in the center of the balls
             circle(frame, posL, 4, Scalar(0,255,0), -1);
-            circle(frame, posR + Point(leftHalfImage->width, 0), 4, Scalar(0,255,0), -1);
+            circle(frame, posR + Point(leftHalfFrame.cols, 0), 4, Scalar(0,255,0), -1);
 
             // Left paddle is drawn in the screen
             leftPaddle.setPosition(posL.y);
@@ -113,7 +118,7 @@ int main(int argc, char *argv[]){
             rectangle(frame, c3, c4, Scalar(255,0,0), -1);
 
             // Image is shown in the window
-            cvShowImage("MainWindow", image);
+            imshow("Simple CV game", frame);
 
             ball.updatePosition();
 
@@ -149,21 +154,20 @@ int main(int argc, char *argv[]){
             break;
 
         // Image is obtained from the camera
-        image = capture.nextVideoFrame();
-        frame = image;
+        cap >> frame;
 
-        if (image == 0)
+        if (frame.empty())
             break;
+
 
         // Who is the winner?
         int winner = score1 > score2 ? 1 : 2;
-        stringstream ss;
+        std::stringstream ss;
         ss << winner;
-        putText(frame, "PLAYER " + ss.str() + " WINS!", Point(50, image->height * 0.5 + 30),FONT_HERSHEY_DUPLEX,2,Scalar(255,255,255),8);
+        putText(frame, "PLAYER " + ss.str() + " WINS!", Point(50, frame.rows * 0.5 + 30),FONT_HERSHEY_DUPLEX,2,Scalar(255,255,255),8);
 
         // Image is shown in the window
-
-        cvShowImage("MainWindow", image);
+        imshow("Simple CV game", frame);
 
         // To stop the camera and close the window
         if( waitKey( 10 ) >= 0 ){
@@ -172,7 +176,7 @@ int main(int argc, char *argv[]){
 
     }
 
-    cvDestroyWindow( "result" );
+    destroyWindow( "Simple CV game" );
 
     return 0;
 

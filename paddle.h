@@ -1,7 +1,11 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
-#include "capture.h"
+#include <opencv2/objdetect/objdetect.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
+using namespace cv;
 
 class Paddle {
 
