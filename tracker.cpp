@@ -65,8 +65,8 @@ Point Tracker::trackObject(){
     binFrame_.copyTo(temp);
 
     // Contours and their hierarchy are located and stored
-    vector< vector<Point> > contours;
-    vector<Vec4i> hierarchy;
+    std::vector< std::vector<Point> > contours;
+    std::vector<Vec4i> hierarchy;
 
     findContours(temp, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
 
